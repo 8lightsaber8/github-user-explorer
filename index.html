@@ -2,12 +2,207 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>github-user-explorer</title>
+    <meta
+      name="description"
+      content="Search for GitHub users and explore their profiles and repositories."
+    />
+
+    <title>GitHub User Explorer</title>
   </head>
+
   <body>
-    <div id="app"></div>
+    <div class="app">
+      <header class="header">
+        <a
+          class="header__logo"
+          id="header-logo"
+          href="/"
+          aria-label="GitHub User Explorer home"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path
+              d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
+            />
+            <path d="M9 18c-4.51 2-5-2-7-2" />
+          </svg>
+
+          <span class="header__title">GitHub User Explorer</span>
+        </a>
+
+        <div class="header__actions">
+          <a
+            href="https://github.com/8lightsaber8/github-user-explorer"
+            class="header__link"
+            data-header-link
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View source code on GitHub"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path
+                d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"
+              />
+              <path d="M9 18c-4.51 2-5-2-7-2" />
+            </svg>
+
+            <span class="header__link-text">GitHub</span>
+          </a>
+        </div>
+      </header>
+
+      <main class="main">
+        <section class="hero">
+          <h1 class="hero__title">Explore GitHub Users</h1>
+
+          <p class="hero__description">
+            Search for a GitHub user and explore their profile and repositories.
+          </p>
+
+          <form class="search-form" id="search-form">
+            <label for="search-input" class="visually-hidden">
+              Enter GitHub username
+            </label>
+
+            <div class="search-form__input-wrapper">
+              <img
+                src="/src/assets/icons/search.svg"
+                class="search-form__icon"
+                alt=""
+                aria-hidden="true"
+              />
+
+              <input
+                type="text"
+                id="search-input"
+                class="search-form__input"
+                placeholder="Enter GitHub username..."
+                autocomplete="off"
+                spellcheck="false"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              class="button button--primary search-form__button"
+            >
+              Search
+            </button>
+          </form>
+        </section>
+
+        <div class="app-states" id="app-states">
+          <section
+            class="state-block state-block--initial"
+            id="state-initial"
+            aria-live="polite"
+          >
+            <img
+              src="/src/assets/icons/search.svg"
+              class="state-block__icon"
+              alt=""
+              aria-hidden="true"
+            />
+
+            <h2 class="state-block__title">Search for a GitHub user</h2>
+
+            <p class="state-block__description">
+              Enter a username above to get started.
+            </p>
+          </section>
+
+          <section
+            class="state-block state-block--loading is-hidden"
+            id="state-loading"
+            aria-live="polite"
+            aria-busy="true"
+          >
+            <div class="spinner" role="status" aria-label="Loading user"></div>
+
+            <p class="state-block__description">Loading user...</p>
+          </section>
+
+          <section
+            class="state-block state-block--error is-hidden"
+            id="state-error"
+            aria-live="assertive"
+          ></section>
+
+          <div class="state-block--success is-hidden" id="state-success">
+            <article class="user-card" id="user-card"></article>
+
+            <section class="repositories" id="repositories">
+              <div class="repositories__header">
+                <h3 class="repositories__title">Repositories</h3>
+
+                <div class="repositories__sort">
+                  <label class="repositories__sort-label" for="repository-sort">
+                    Sort by
+                  </label>
+
+                  <select
+                    class="repositories__sort-select"
+                    id="repository-sort"
+                    name="repository-sort"
+                  >
+                    <option value="updated">Updated</option>
+                    <option value="stars">Stars</option>
+                    <option value="name">Name</option>
+                  </select>
+                </div>
+              </div>
+              <div class="repositories__grid" id="repositories-grid"></div>
+
+              <nav
+                class="pagination is-hidden"
+                id="pagination"
+                aria-label="Repositories pagination"
+              ></nav>
+            </section>
+
+            <div
+              class="state-block state-block--empty-repos is-hidden"
+              id="empty-repos"
+            >
+              <p class="state-block__description">
+                No repositories found. This user doesn't have any public
+                repositories.
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <div class="footer__content">
+          <p>Built as a frontend practice project.</p>
+        </div>
+      </footer>
+    </div>
+
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
